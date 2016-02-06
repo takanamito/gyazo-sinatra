@@ -13,6 +13,10 @@ module Gyazo
       set :image_url, 'http://gyazo.send.sh/images'
     end
 
+    get '/' do
+      erb :index
+    end
+
     post '/' do
       id = request[:id]
       data = request[:imagedata][:tempfile].read

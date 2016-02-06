@@ -21,11 +21,11 @@ module Gyazo
       id = request[:id]
       data = request[:imagedata][:tempfile].read
       hash = Digest::MD5.hexdigest(data).to_s
-      dbm = SDBM.open(options.dbm_path, 0644)
+      dbm = SDBM.open(settings.dbm_path, 0644)
       dbm[hash] = id
-      File.open("#{options.image_dir}/#{hash}.png", 'w'){|f| f.write(data)}
+      File.open("#{settings.image_dir}/#{hash}.png", 'w'){|f| f.write(data)}
 
-      "#{options.image_url}/#{hash}.png"
+      "#{settings.image_url}/#{hash}.png"
     end
   end
 end

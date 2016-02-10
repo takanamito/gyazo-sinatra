@@ -1,0 +1,22 @@
+server {
+    listen       80;
+    server_name  example.com;
+
+    root /path/to/gyazo-sinatra/public;
+
+    access_log   /var/log/nginx/gyazo-sinatra/access.log;
+    error_log    /var/log/nginx/gyazo-sinatra/error.log;
+
+    small_light on;
+
+    location ~ small_light[^/]*/(.+)$ {
+        set $file $1;
+        rewrite ^ /$file;
+    }
+
+    try_files   $uri $uri/index.html @rack;
+
+    location @rack {
+        proxy_pass http://127.0.0.1:8888;
+    }
+}

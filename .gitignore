@@ -3,6 +3,7 @@
 /db/
 /public/images/
 .Gemfile.lock.tags
+.env*
 
 ### Ruby ###
 *.gem

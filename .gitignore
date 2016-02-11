@@ -4,6 +4,11 @@
 /public/images/
 .Gemfile.lock.tags
 .env*
+/log/*
+/tmp/pids/*
+/tmp/sockets/*
+
+!.gitkeep
 
 ### Ruby ###
 *.gem
@@ -15,7 +20,6 @@
 /spec/reports/
 /test/tmp/
 /test/version_tmp/
-/tmp/
 
 ## Specific to RubyMotion:
 .dat*
@@ -46,8 +50,6 @@ build/
 ### Rails ###
 *.rbc
 capybara-*.html
-/log
-/tmp
 /db/*.sqlite3
 /db/*.sqlite3-journal
 /public/system

@@ -27,7 +27,8 @@ module Gyazo
       dbm[hash] = id
       File.open("#{settings.image_dir}/#{hash}.png", 'w'){|f| f.write(data)}
 
-      "#{settings.image_url}/#{hash}.png"
+      @url = "#{settings.image_url}/#{hash}.png"
+      erb :show
     end
   end
 end

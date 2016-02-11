@@ -3,10 +3,16 @@
   <head>
     <meta charset="utf-8">
     <title>画像倉庫@times-nakajima.com</title>
+    <script async src="/javascripts/show.js"></script>
   </head>
   <body>
     <h1>画像倉庫@times-nakajima.com</h1>
-    <p><%= @url %></p>
+    <form>
+      <input type='text' name='image-url' id='js-image-url' value='<%= @url %>' style='width: 50%'>
+      <input id='js-btn-copy' type='button' value='クリップボードにURLをコピー'>
+    </form>
+    <br>
+    <br>
     <img src='<%= @url %>'>
     <br>
     <a href='/'>TOPへ戻る</a>

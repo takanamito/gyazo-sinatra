@@ -3,11 +3,13 @@ require 'sinatra'
 require 'rack'
 require 'digest/md5'
 require 'sdbm'
+require 'dotenv'
 
 module Gyazo
   class Controller < Sinatra::Base
 
     configure do
+      Dotenv.load
       set :dbm_path, 'db/id'
       set :image_dir, 'public/images'
       set :image_url, "#{ENV['WEB_HOST']}/images"

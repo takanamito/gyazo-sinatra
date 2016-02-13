@@ -1,13 +1,12 @@
-require 'rubygems'
-require 'sinatra'
-require 'rack'
+require 'aws-sdk'
 require 'digest/md5'
-require 'sdbm'
 require 'dotenv'
+require 'rubygems'
+require 'sdbm'
+require 'sinatra'
 
 module Gyazo
   class Controller < Sinatra::Base
-
     configure do
       Dotenv.load
       set :dbm_path, 'db/id'
@@ -27,8 +26,25 @@ module Gyazo
       dbm[hash] = id
       File.open("#{settings.image_dir}/#{hash}.png", 'w'){|f| f.write(data)}
 
+      send_s3("#{hash}.png", "#{settings.image_dir}")
+
       @url = "#{settings.image_url}/#{hash}.png"
       erb :show
+    end
+
+    private
+
+    def send_s3(file_name, path)
+      s3 = Aws::S3::Resource.new(
+        region: ENV['AWS_REGION'],
+        credentials:
+          Aws::Credentials.new(
+            ENV['AWS_ACCESS_KEY_ID'],
+            ENV['AWS_SECRET_ACCESS_KEY']
+          ),
+      )
+      obj = s3.bucket(ENV['AWS_S3_BUCKET']).object("images/#{file_name}")
+      obj.upload_file("#{path}/#{file_name}")
     end
   end
 end

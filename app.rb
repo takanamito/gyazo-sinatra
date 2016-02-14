@@ -29,7 +29,11 @@ module Gyazo
       send_s3("#{hash}.png", "#{settings.image_dir}")
 
       @url = "#{settings.image_url}/#{hash}.png"
-      erb :show
+      if request.user_agent == ENV['APP_UA']
+        @url
+      else
+        erb :show
+      end
     end
 
     private

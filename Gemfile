@@ -3,6 +3,7 @@ source "https://rubygems.org"
 
 gem 'aws-sdk', '~> 2'
 gem 'dotenv'
+gem 'pry'
 gem 'rack'
 gem 'sinatra'
 gem 'unicorn'

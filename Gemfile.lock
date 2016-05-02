@@ -55,6 +55,7 @@ PLATFORMS
 DEPENDENCIES
   aws-sdk (~> 2)
   dotenv
+  faraday
   pry
   rack
   sinatra

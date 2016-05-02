@@ -51,7 +51,7 @@ module Gyazo
       end
 
       client = Slack::Client.new
-      puts client.files_upload(
+      client.files_upload(
         channels: request[:channel_name],
         username: ENV['WEB_HOST'],
         file: Faraday::UploadIO.new("#{settings.image_dir}/#{image_path(url.first)}", 'image/jpg'),

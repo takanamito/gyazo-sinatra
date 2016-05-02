@@ -44,6 +44,7 @@ module Gyazo
     end
 
     post '/outgoing_webhook' do
+      return 403 if request[:token] != ENV['SLACK_OUTGOING_TOKEN']
       url = URI.extract(request[:text])
 
       Slack.configure do |config|

@@ -63,7 +63,7 @@ module Gyazo
     private
 
     def image_path(url)
-      url.gsub("#{ENV['WEB_HOST']}/#{settings.image_dir}/", '')
+      url.gsub("#{ENV['WEB_HOST']}/images/", '')
     end
 
     def today_path(today)

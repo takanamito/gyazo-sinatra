@@ -4,6 +4,8 @@ require 'dotenv'
 require 'rubygems'
 require 'sdbm'
 require 'sinatra'
+require 'slack'
+require 'uri'
 
 module Gyazo
   class Controller < Sinatra::Base
@@ -41,7 +43,27 @@ module Gyazo
       end
     end
 
+    post '/outgoing_webhook' do
+      url = URI.extract(request[:text])
+
+      Slack.configure do |config|
+        config.token = ENV['SLACK_TOKEN']
+      end
+
+      client = Slack::Client.new
+      puts client.files_upload(
+        channels: request[:channel_name],
+        username: ENV['WEB_HOST'],
+        file: Faraday::UploadIO.new("#{settings.image_dir}/#{image_path(url.first)}", 'image/jpg'),
+        filename: image_path(url.first)
+      )
+    end
+
     private
+
+    def image_path(url)
+      url.gsub("#{ENV['WEB_HOST']}/#{settings.image_dir}/", '')
+    end
 
     def today_path(today)
       "#{today.year}/#{today.month}/#{today.day}"

@@ -6,6 +6,7 @@ require 'sdbm'
 require 'sinatra'
 require 'slack'
 require 'uri'
+require 'pry'
 
 module Gyazo
   class Controller < Sinatra::Base
@@ -13,6 +14,7 @@ module Gyazo
       Dotenv.load
       set :dbm_path, 'db/id'
       set :image_dir, 'public/images'
+      set :video_dir, 'public/videos'
       set :image_url, "#{ENV['WEB_HOST']}/images"
     end
 
@@ -60,6 +62,26 @@ module Gyazo
       )
     end
 
+    post '/upload_movie' do
+      id = request[:id]
+      data = request[:videodata][:tempfile].read
+      hash = Digest::MD5.hexdigest(data).to_s
+      dbm = SDBM.open(settings.dbm_path, 0644)
+      dbm[hash] = id
+
+      today = Date.today
+      local_path = "#{settings.video_dir}/#{today_path(today)}"
+
+      FileUtils.mkdir_p(local_path) unless FileTest.exist?(local_path)
+      File.open("#{local_path}/#{hash}.mp4", 'w') { |f| f.write(data) }
+
+      send_s3("#{hash}.mp4", local_path, "videos/#{today_path(today)}")
+
+      # ここでs3のパスを返す
+      @url = URI.join(ENV['AWS_S3_BUCKET_URL_VIDEO'], "videos/#{today_path(today)}/#{hash}/master.m3u8")
+      erb :show
+    end
+
     private
 
     def image_path(url)
@@ -79,7 +101,7 @@ module Gyazo
             ENV['AWS_SECRET_ACCESS_KEY']
           ),
       )
-      obj = s3.bucket(ENV['AWS_S3_BUCKET']).object("#{remote_path}/#{file_name}")
+      obj = s3.bucket(ENV['AWS_S3_BUCKET_IMAGE']).object("#{remote_path}/#{file_name}")
       obj.upload_file("#{local_path}/#{file_name}")
     end
   end
